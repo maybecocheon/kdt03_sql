@@ -55,6 +55,9 @@ FROM orders
 WHERE orderdate BETWEEN '2024-07-04' AND '2024-07-07';
 
 -- 5) 2024년 7월 4일 ~ 7월 7일 사이에 주문받은 도서를 제외한 도서의 주문번호
+SELECT orderid
+FROM orders
+WHERE orderdate NOT BETWEEN '2024-07-04' AND '2024-07-07';
 
 -- 6) 성이 '김'씨인 고객의 이름과 주소
 SELECT name, address
@@ -65,3 +68,38 @@ WHERE name LIKE '김%';
 SELECT name, address
 FROM customer
 WHERE name LIKE '김%아';
+
+-- 8) 주문하지 않은 고객의 이름(부속질의 사용)
+SELECT name
+FROM customer
+WHERE custid NOT IN (SELECT custid FROM orders);
+
+-- 9) 주문 금액의 총액과 주문의 평균 금액
+SELECT SUM(saleprice), AVG(saleprice)
+FROM orders;
+
+-- 10) 고객의 이름과 고객별 구매액
+SELECT c.name, SUM(saleprice)
+FROM customer c, orders o
+WHERE c.custid = o.custid
+GROUP BY o.custid;
+
+-- 11) 고객의 이름과 고객이 구매한 도서 목록
+SELECT c.name, b.bookname
+FROM customer c, orders o, book b
+WHERE c.custid = o.custid AND o.bookid = b.bookid;
+
+-- 12) 도서의 가격과 판매가격의 차이가 가장 많은 주문
+SELECT MAX(b.price - o.saleprice)
+FROM book b, orders o
+WHERE b.bookid = o.bookid;
+
+-- 13) 도서의 판매액 평균보다 자신의 구매액 평균이 더 높은 고객의 이름
+SELECT name
+FROM customer c
+WHERE (SELECT AVG(saleprice)
+		FROM orders o1
+		WHERE c.custid = o1.custid
+		GROUP BY o1.custid) > (SELECT AVG(saleprice) FROM orders o2);
+
+                    
