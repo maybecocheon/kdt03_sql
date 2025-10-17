@@ -19,21 +19,22 @@ WHERE b1.price > (SELECT AVG(b2.price)
 -- 평균 주문금액 이하의 주문에 대해서 주문번호와 금액을 나타내시오.
 SELECT orderid, saleprice
 FROM orders
-WHERE saleprice <= (SELECT AVG(saleprice) FROM orders);
+WHERE saleprice <= (SELECT AVG(saleprice)
+					FROM orders);
 
 -- 각 고객의 평균 주문금액보다 큰 금액의 주문 내역에 대해서 주문번호, 고객번호, 금액을 나타내시오.
 SELECT orderid, custid, saleprice
 FROM orders o1
 WHERE saleprice > (SELECT AVG(saleprice)
 					FROM orders o2
-					WHERE o1.custid = o2.custid);
+                    WHERE o1.custid = o2.custid);
 
 -- 대한민국에 거주하는 고객에게 판매한 도서의 총판매액을 구하시오.
 SELECT SUM(saleprice)
-FROM orders o
+FROM orders
 WHERE custid IN (SELECT custid
 				FROM customer
-				WHERE address LIKE '%대한민국%');
+                WHERE address LIKE '대한민국%');
 
 -- 3번 고객이 주문한 도서의 최고 금액보다 더 비싼 도서를 구입한 주문의 주문번호와 판매금액을 보이시오.
 
