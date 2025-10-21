@@ -45,3 +45,9 @@ select *
 from book
 order by price, bookname desc;
 -- 내림차순은 뒤에 desc 붙임
+
+-- OFFSET은 몇 번째부터(초기 위치값), LIMIT은 몇 개
+SELECT *
+FROM orders
+ORDER BY orderid DESC
+LIMIT 5 OFFSET 0;
